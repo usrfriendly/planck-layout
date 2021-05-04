@@ -24,8 +24,26 @@ enum planck_layers {
 enum planck_keycodes {
 };
 */
-#define LOWER MO(_LOWER)
-#define RAISE MO(_RAISE)
+//#define LOWER MO(_LOWER)
+//#define RAISE MO(_RAISE)
+enum custom_keycodes {
+        // a list, so if any get added, use commas
+        HUNIT,
+};
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+        switch(keycode) {       
+                case HUNIT:     
+                        if (record->event.pressed) {
+                                // activates HUND 
+                                SEND_STRING("00");
+                        }
+                        else {
+                                // do nothing
+                        }
+                        break;
+        }
+        return true;
+};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -44,7 +62,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
     KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT ,
-    MO(4),   KC_LCTL, KC_LALT, KC_LGUI,   MO(2),   KC_SPC,  KC_SPC,  MO(3),   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
+    MO(5),   KC_LCTL, KC_LALT, KC_LGUI,   MO(2),   KC_SPC,  KC_SPC,  MO(3),   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
 ),
 
 /* Gaming
@@ -62,7 +80,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
     KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT ,
-    MO(4),   KC_LCTL, KC_LALT, KC_SPC,  KC_SPC,  KC_SPC,  KC_SPC,  KC_SPC,  KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
+    MO(5),   KC_LCTL, KC_LALT, KC_SPC,  KC_SPC,  KC_SPC,  KC_SPC,  KC_SPC,  KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
 ),
 
 /* Lower
@@ -118,5 +136,43 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     DF(1),   AU_TOG,  CK_TOGG, _______, _______, _______, _______, _______, _______,  _______, _______, _______,
     _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______,
     _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______
+),
+//theoretical numpad layout, may get function keys, [5] to establish numpad numbers and control layout
+/* Adjust (Lower + Raise)
+ *                      
+ * ,-----------------------------------------------------------------------------------.
+ * |NORMAL|      |      |      |      |      |      |      | KC_P7| KC_P8| KC_P9|      | 
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |GAMING|      |      |      |      |      |      |      | KC_P4| KC_P5| KC_P6|      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      | KC_P1| KC_P2| KC_P3|      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |             |      | KC_P0| KC_00|KC_DOT|      |
+ * `-----------------------------------------------------------------------------------'
+ */
+[5] = LAYOUT_planck_grid(
+    DF(0),   _______, _______, _______, _______, _______, _______, KC_P7,    KC_P8,   KC_P9,   _______, _______,
+    DF(1),   _______, _______, _______, _______, _______, _______, KC_P4,    KC_P5,   KC_P6,   _______, _______,
+    _______, _______, _______, _______, _______, _______, _______, KC_P1,    KC_P2,   KC_P3,   _______, _______,
+    _______, MO(6),   _______, _______, _______, _______, _______, KC_P0,    HUNIT,  KC_PDOT, _______, _______
+),
+//theoretical numpad layout, higher layer, [5] for inputting/functions, etc
+/* Adjust (Lower + Raise)
+ *                      
+ * ,-----------------------------------------------------------------------------------.
+ * |NORMAL|      |      |      |      |      |      |      |      |      |      |      | 
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |GAMING|      |      |      |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * |      |      |      |      |      |             |      |      |      |      |      |
+ * `-----------------------------------------------------------------------------------'
+ */
+[6] = LAYOUT_planck_grid(
+    _______, _______, _______, _______, _______, _______, KC_NLCK, KC_PSLS,  KC_PAST, KC_PMNS, _______, _______,
+    _______, _______, _______, _______, _______, _______, _______, _______,  _______, KC_PPLS, _______, _______,
+    _______, _______, _______, _______, _______, _______, _______, _______,  _______, KC_PENT, _______, _______,
+    _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______
 )
 };
